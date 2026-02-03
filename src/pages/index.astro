@@ -1,0 +1,71 @@
+---
+import CustomWebComponent from "../components/CustomWebComponent.astro";
+---
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="generator" content={Astro.generator} />
+    <title>Astro</title>
+  </head>
+  <body>
+    <h1>Astro</h1>
+
+    <p>
+      The issue is that the connectedCallback() function of the non-template web
+      component is not called when the component is mounted.
+    </p>
+    <p>
+      EG: Load the page and click "Update from inside component" button to
+      verify it doesn't work (hasn't had the event listener attached).
+    </p>
+    <p>
+      Then click "Create web component from template" button to create a new
+      instance of the web component from the template. The connectCallback
+      function is called and the button inside the component works as expected.
+    </p>
+    <p>
+      Finally, remove the template tags around the first CustomWebComponent
+      instance and reload the page. Now both components work as expected.
+    </p>
+    <br />
+
+    <template>
+      <CustomWebComponent />
+    </template>
+
+    <button id="create-button">Create web component from template</button>
+
+    <CustomWebComponent />
+
+    <br />
+    <br />
+    <br />
+    <p>
+      I'm guessing this has something to do with Astros' deduplication of
+      identical components?
+    </p>
+  </body>
+</html>
+
+<script>
+  const createButton = document.getElementById("create-button");
+  createButton.addEventListener("click", () => {
+    const template = document.querySelector("template");
+    const clone = template.content.cloneNode(true);
+    document.body.appendChild(clone);
+  });
+
+  const updateFromOutsideButton = document.getElementById(
+    "update-from-outside-button",
+  );
+  updateFromOutsideButton.addEventListener("click", () => {
+    const customElements = document.querySelectorAll("custom-web-component");
+    customElements.forEach((el) => {
+      el.update();
+    });
+  });
+</script>

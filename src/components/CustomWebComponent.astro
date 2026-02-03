@@ -1,0 +1,25 @@
+<custom-web-component>
+  <p data-content>Initial</p>
+
+  <button> Update from inside component </button>
+</custom-web-component>
+
+<script>
+  export class CustomWebComponent extends HTMLElement {
+    connectedCallback() {
+      const content = this.querySelector("[data-content]");
+      content.textContent = "Connected Callback";
+
+      this.querySelector("button").addEventListener("click", () => {
+        this.update();
+      });
+    }
+
+    update() {
+      const content = this.querySelector("[data-content]");
+      content.textContent = `Updated at ${new Date().toLocaleTimeString()}`;
+    }
+  }
+
+  customElements.define("custom-web-component", CustomWebComponent);
+</script>
